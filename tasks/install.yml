@@ -1,0 +1,22 @@
+- name: install | Run Installer
+  command: |
+    ipa-server-install -U
+    -a {{ freeIPA_server_admin_password }}
+    -p {{ freeIPA_server_dir_admin_password }}
+    -n {{ freeIPA_server_domain }}
+    -r {{ freeIPA_server_realm }}
+    --hostname={{ freeIPA_server_fqdn }}
+    --ip-address={{ freeIPA_server_ip_address }}
+    {% if freeIPA_server_integrated_dns %}
+    --setup-dns
+    {%   if freeIPA_server_dns_forwarders != [] %}
+    {%     for forwarder in freeIPA_server_dns_forwarders %}
+    --forwarder=forwarder
+    {%     endfor %}
+    {%   else %}
+    --auto-forwarders
+    {%   endif %}
+    {% endif %}
+  args:
+    creates: /etc/ipa/default.conf
+  become: true
