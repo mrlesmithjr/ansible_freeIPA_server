@@ -4,11 +4,13 @@ services:
   - docker
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-ce
+  # - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-ce
 install:
   - pip install molecule
   # - pip install required driver (e.g. docker, python-vagrant, shade)
 script:
-  - molecule test
+  - molecule lint
+  - molecule dependency
+  - molecule syntax
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
